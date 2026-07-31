@@ -2,6 +2,7 @@ import { formatAnswersForEmail } from './recommendations.js';
 import { getTrafficSource, getUtmParams } from './utm.js';
 
 const RECIPIENT = 'skorobogatay75@gmail.com';
+const QUIZ_URL = 'https://skorobogatay75-dotcom.github.io/Quiz-AI/';
 
 async function fetchClientIp() {
   try {
@@ -18,10 +19,28 @@ async function fetchClientIp() {
 
 function buildPayload({ form, answers, questions, recommendation }) {
   const utm = getUtmParams();
+  const answersText = formatAnswersForEmail(answers, questions);
 
   return {
     _subject: `Заявка с AI-квиза: ${form.name}`,
     _template: 'table',
+    _captcha: 'false',
+    // Точный адрес квиза — иначе FormSubmit сохраняет только корень github.io
+    _url: typeof window !== 'undefined' ? window.location.href : QUIZ_URL,
+    name: form.name,
+    email: form.email || 'не указан',
+    phone: form.phone,
+    message: [
+      `Рекомендация: ${recommendation.title}`,
+      recommendation.description,
+      '',
+      'Ответы квиза:',
+      answersText,
+      '',
+      form.comment ? `Комментарий: ${form.comment}` : null,
+    ]
+      .filter(Boolean)
+      .join('\n'),
     Дата: new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }),
     Имя: form.name,
     Телефон: form.phone,
@@ -29,18 +48,16 @@ function buildPayload({ form, answers, questions, recommendation }) {
     Комментарий: form.comment || '—',
     'Рекомендованный тип AI-помощника': recommendation.title,
     'Описание рекомендации': recommendation.description,
-    'Ответы квиза': formatAnswersForEmail(answers, questions),
-    'UTM-метки': Object.keys(utm).length
-      ? JSON.stringify(utm)
-      : 'нет',
+    'Ответы квиза': answersText,
+    'UTM-метки': Object.keys(utm).length ? JSON.stringify(utm) : 'нет',
     'Источник перехода': getTrafficSource(),
+    'Страница квиза': QUIZ_URL,
     'User-Agent': navigator.userAgent,
   };
 }
 
 /**
  * Отправка заявки на почту через FormSubmit (без серверного бэкенда).
- * При первой отправке FormSubmit просит подтвердить адрес получателя.
  */
 export async function submitLead(data) {
   const ip = await fetchClientIp();
@@ -49,22 +66,36 @@ export async function submitLead(data) {
     IP: ip,
   };
 
-  const response = await fetch(
-    `https://formsubmit.co/ajax/${RECIPIENT}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(payload),
+  const response = await fetch(`https://formsubmit.co/ajax/${RECIPIENT}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
-  );
+    body: JSON.stringify(payload),
+  });
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || 'Не удалось отправить заявку');
+  const raw = await response.text();
+  let result = null;
+
+  try {
+    result = raw ? JSON.parse(raw) : null;
+  } catch {
+    result = null;
   }
 
-  return response.json();
+  const failed =
+    !response.ok ||
+    result?.success === false ||
+    result?.success === 'false';
+
+  if (failed) {
+    throw new Error(
+      result?.message ||
+        raw ||
+        'Не удалось отправить заявку. Проверьте папку «Спам» или попробуйте ещё раз.',
+    );
+  }
+
+  return result ?? { success: true };
 }
