@@ -1,0 +1,77 @@
+export const questions = [
+  {
+    id: 'occupation',
+    text: 'Чем Вы занимаетесь?',
+    options: [
+      { id: 'expert', label: 'Эксперт' },
+      { id: 'entrepreneur', label: 'Предприниматель' },
+      { id: 'marketer', label: 'Маркетолог' },
+      { id: 'psychologist', label: 'Психолог' },
+      { id: 'coach', label: 'Коуч' },
+      { id: 'realtor', label: 'Риелтор' },
+      { id: 'beauty', label: 'Бьюти-сфера' },
+      { id: 'online-school', label: 'Онлайн-школа' },
+      { id: 'other', label: 'Другое' },
+    ],
+  },
+  {
+    id: 'timeSink',
+    text: 'Что сейчас отнимает больше всего времени?',
+    options: [
+      { id: 'content', label: 'Создание контента' },
+      { id: 'messaging', label: 'Переписка с клиентами' },
+      { id: 'sales', label: 'Продажи' },
+      { id: 'finding-clients', label: 'Поиск клиентов' },
+      { id: 'routine', label: 'Рутинные задачи' },
+      { id: 'applications', label: 'Обработка заявок' },
+      { id: 'documents', label: 'Документы' },
+      { id: 'other', label: 'Другое' },
+    ],
+  },
+  {
+    id: 'automate',
+    text: 'Что Вы хотели бы автоматизировать в первую очередь?',
+    options: [
+      { id: 'content', label: 'Контент' },
+      { id: 'sales', label: 'Продажи' },
+      { id: 'consultations', label: 'Консультации' },
+      { id: 'client-replies', label: 'Ответы клиентам' },
+      { id: 'booking', label: 'Запись на услуги' },
+      { id: 'website', label: 'Сайт' },
+      { id: 'business-processes', label: 'Бизнес-процессы' },
+    ],
+  },
+  {
+    id: 'want',
+    text: 'Что хотелось бы получить?',
+    options: [
+      { id: 'gpt-agent', label: 'GPT-агента' },
+      { id: 'ai-bot', label: 'AI-бота' },
+      { id: 'selling-site', label: 'Продающий сайт' },
+      { id: 'ai-consultant', label: 'AI-консультанта' },
+      { id: 'auto-funnel', label: 'Автоматическую воронку' },
+      { id: 'need-recommendation', label: 'Не знаю, нужна рекомендация' },
+    ],
+  },
+  {
+    id: 'timeline',
+    text: 'Когда планируете внедрять AI?',
+    options: [
+      { id: 'now', label: 'Сейчас' },
+      { id: 'month', label: 'В течение месяца' },
+      { id: 'later', label: 'Позже' },
+      { id: 'exploring', label: 'Пока изучаю возможности' },
+    ],
+  },
+  {
+    id: 'priority',
+    text: 'Что для Вас сейчас важнее?',
+    options: [
+      { id: 'save-time', label: 'Экономить время' },
+      { id: 'more-leads', label: 'Получать больше заявок' },
+      { id: 'increase-sales', label: 'Увеличить продажи' },
+      { id: 'free-from-routine', label: 'Освободить себя от рутины' },
+      { id: 'impress-clients', label: 'Удивить клиентов современным сервисом' },
+    ],
+  },
+];
