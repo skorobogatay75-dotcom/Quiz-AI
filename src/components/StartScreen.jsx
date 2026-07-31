@@ -2,6 +2,16 @@ export function StartScreen({ texts, brand, onStart }) {
   return (
     <section className="screen screen--start" aria-labelledby="quiz-title">
       <div className="hero-glow" aria-hidden="true" />
+      <div className="avatar">
+        <img
+          className="avatar__img"
+          src={`${import.meta.env.BASE_URL}maria.png`}
+          alt={brand.name}
+          width={128}
+          height={128}
+          decoding="async"
+        />
+      </div>
       <p className="brand-line">
         <span className="brand-line__name">{brand.name}</span>
         <span className="brand-line__dot" aria-hidden="true" />
